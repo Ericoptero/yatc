@@ -1,12 +1,13 @@
 import Head from "next/head";
 import Image from "next/image";
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
 
 import { type RouterOutputs, api } from "~/utils/api";
 
 import dayjs from "dayjs";
 
 import relativeTime from "dayjs/plugin/relativeTime";
+import { LoadingPage } from "~/components/Loading";
 
 dayjs.extend(relativeTime);
 
@@ -17,38 +18,72 @@ const CreatePostWizard = () => {
 
   return (
     <div className="flex w-full gap-3">
-      <Image src={user.imageUrl} alt="Profile image" className="h-14 w-14 rounded-full" width={56} height={56} />
-      <input type="text" placeholder="Type what you want!!" className="grow bg-transparent outline-none" />
+      <Image
+        src={user.imageUrl}
+        alt="Profile image"
+        className="h-14 w-14 rounded-full"
+        width={56}
+        height={56}
+      />
+      <input
+        type="text"
+        placeholder="Type what you want!!"
+        className="grow bg-transparent outline-none"
+      />
     </div>
-  )
-}
+  );
+};
 
-type PostWithUser = RouterOutputs["post"]["getAll"][number]
+type PostWithUser = RouterOutputs["post"]["getAll"][number];
 const PostView = (props: PostWithUser) => {
   const { post, author } = props;
 
   return (
     <div className="flex gap-3 border-b border-slate-400 p-4">
-      <Image src={author.imageUrl} alt={`@${author.username}'s profile picture`} className="w-14 h-14 rounded-full" width={56} height={56} />
+      <Image
+        src={author.imageUrl}
+        alt={`@${author.username}'s profile picture`}
+        className="h-14 w-14 rounded-full"
+        width={56}
+        height={56}
+      />
       <div className="flex flex-col">
         <div className="flex gap-1 font-bold text-slate-300">
           <span>{`@${author.username}`}</span>
-          <span className="font-thin">{`· ${dayjs(post.createdAt).fromNow()}`}</span>
+          <span className="font-thin">{`· ${dayjs(
+            post.createdAt
+          ).fromNow()}`}</span>
         </div>
         <span>{post.content}</span>
       </div>
     </div>
-  )
-}
+  );
+};
+
+const Feed = () => {
+  const { data, isLoading: postsLoading } = api.post.getAll.useQuery();
+
+  if (postsLoading) return <LoadingPage />;
+
+  if (!data) return <div>Something went wrong</div>;
+
+  return (
+    <div className="flex flex-col">
+      {data.map((postWithUser) => (
+        <PostView {...postWithUser} key={postWithUser.post.id} />
+      ))}
+    </div>
+  );
+};
 
 export default function Home() {
-  const user = useUser();
+  const { isLoaded: userLoaded, isSignedIn } = useUser();
 
-  const { data , isLoading } = api.post.getAll.useQuery();
+  // This is called here, just to get the data as fast as possible
+  // to the Feed Component use the cached data from this call.
+  api.post.getAll.useQuery();
 
-  if (isLoading) return (<div>Loading...</div>)
-
-  if (!data) return (<div>Something went wrong</div>)
+  if (!userLoaded) return <div />;
 
   return (
     <>
@@ -60,25 +95,17 @@ export default function Home() {
       <main className="flex h-screen justify-center">
         <div className="h-full w-full border-x border-slate-400 md:max-w-2xl">
           <div className="flex border-b border-slate-400 p-4">
-            {!user.isSignedIn && (
+            {!isSignedIn && (
               <div className="flex justify-center">
                 <SignInButton mode="modal">
-                  <button type="button">
-                    Sign in
-                  </button>
+                  <button type="button">Sign in</button>
                 </SignInButton>
               </div>
             )}
-            {user.isSignedIn && <CreatePostWizard />}
+            {isSignedIn && <CreatePostWizard />}
           </div>
 
-          
-
-          <div className="flex flex-col">
-            {data.map((postWithUser) => (
-              <PostView {...postWithUser} key={postWithUser.post.id} />
-            ))}
-          </div>
+          <Feed />
         </div>
       </main>
     </>
