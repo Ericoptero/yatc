@@ -1,8 +1,20 @@
-export const LoadingSpinner = (props: { size?: number }) => {
+import type { HTMLProps } from "react";
+
+interface LoadingProps extends HTMLProps<HTMLDivElement> {
+  size?: number;
+  absolutePositioned?: boolean;
+}
+
+export const LoadingSpinner = (props: LoadingProps) => {
   return (
     <div
-      className="absolute left-1/2 top-1/2 mr-2 -translate-x-1/2 -translate-y-1/2"
+      className={
+        props.absolutePositioned
+          ? "absolute left-1/2 top-1/2 mr-2 -translate-x-1/2 -translate-y-1/2"
+          : ""
+      }
       role="status"
+      {...props}
     >
       <svg
         aria-hidden="true"
