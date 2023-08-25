@@ -8,11 +8,23 @@ import dayjs from "dayjs";
 
 import relativeTime from "dayjs/plugin/relativeTime";
 import { LoadingPage } from "~/components/Loading";
+import { useState } from "react";
 
 dayjs.extend(relativeTime);
 
 const CreatePostWizard = () => {
   const { user } = useUser();
+
+  const [type, setType] = useState("");
+
+  const ctx = api.useContext();
+
+  const { mutate, isLoading: isPosting } = api.post.create.useMutation({
+    onSuccess: () => {
+      setType("");
+      void ctx.post.getAll.invalidate();
+    },
+  });
 
   if (!user) return null;
 
@@ -29,7 +41,13 @@ const CreatePostWizard = () => {
         type="text"
         placeholder="Type what you want!!"
         className="grow bg-transparent outline-none"
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        disabled={isPosting}
       />
+      <button type="submit" onClick={() => mutate({ content: type })}>
+        Post
+      </button>
     </div>
   );
 };
