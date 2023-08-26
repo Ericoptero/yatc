@@ -27,7 +27,7 @@ export default function ProfilePage({ username }: ProfilePageProps) {
       </Head>
       <PageLayout>
         <div>{data.username}</div>
-      </PageLa>
+      </PageLayout>
     </>
   );
 }
