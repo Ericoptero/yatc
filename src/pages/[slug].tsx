@@ -1,13 +1,10 @@
 import type { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { createServerSideHelpers } from "@trpc/react-query/server";
-import superjson from "superjson";
-import { appRouter } from "~/server/api/root";
-import { prisma } from "~/server/db";
 import { PageLayout } from "~/components/Layout";
 import Image from "next/image";
 import { PostView } from "~/components/PostView";
+import { generateServerSideHelpers } from "~/server/helpers/ServerSideHelpers";
 
 type ProfilePageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -65,11 +62,7 @@ export default function ProfilePage({ username }: ProfilePageProps) {
 }
 
 export const getStaticProps = async (context: ProfileStaticPropsContext) => {
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: { prisma, userId: null },
-    transformer: superjson, // optional - adds superjson serialization
-  });
+  const helpers = generateServerSideHelpers();
 
   const slug = context.params?.slug;
 
