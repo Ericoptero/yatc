@@ -1,6 +1,6 @@
-import type { HTMLProps } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 
-interface LoadingProps extends HTMLProps<HTMLDivElement> {
+interface LoadingProps extends ComponentPropsWithoutRef<"div"> {
   size?: number;
   absolutePositioned?: boolean;
 }

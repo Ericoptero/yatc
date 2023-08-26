@@ -1,8 +1,15 @@
 import type { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { api } from "~/utils/api";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import superjson from "superjson";
+import { appRouter } from "~/server/api/root";
+import { prisma } from "~/server/db";
+import { PageLayout } from "~/components/layout";
 
 type ProfilePageProps = InferGetStaticPropsType<typeof getStaticProps>;
+
+type ProfileStaticPropsContext = GetStaticPropsContext<{ slug: string }>;
 
 export default function ProfilePage({ username }: ProfilePageProps) {
   const { data } = api.profile.getUserByUsername.useQuery({
@@ -18,19 +25,12 @@ export default function ProfilePage({ username }: ProfilePageProps) {
         <meta name="description" content="Profile Page" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex h-screen justify-center">
+      <PageLayout>
         <div>{data.username}</div>
-      </main>
+      </PageLa>
     </>
   );
 }
-
-import { createServerSideHelpers } from "@trpc/react-query/server";
-import superjson from "superjson";
-import { appRouter } from "~/server/api/root";
-import { prisma } from "~/server/db";
-
-type ProfileStaticPropsContext = GetStaticPropsContext<{ slug: string }>;
 
 export const getStaticProps = async (context: ProfileStaticPropsContext) => {
   const helpers = createServerSideHelpers({
