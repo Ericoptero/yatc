@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Head from "next/head";
 import Image from "next/image";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
@@ -101,11 +100,6 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>Home - Yet Another Twitter Clone</title>
-        <meta name="description" content="Yet Another Twitter Clone" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <PageLayout>
         <div className="flex border-b border-slate-400 p-4">
           {!isSignedIn && (

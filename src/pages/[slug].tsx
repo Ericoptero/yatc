@@ -39,9 +39,7 @@ export default function ProfilePage({ username }: ProfilePageProps) {
   return (
     <>
       <Head>
-        <title>Profile Page</title>
-        <meta name="description" content="Profile Page" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>{`@${data.username}'s Profile - YATC`}</title>
       </Head>
       <PageLayout>
         <div className="relative h-36 bg-slate-600">
