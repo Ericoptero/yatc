@@ -5,11 +5,32 @@ import { createServerSideHelpers } from "@trpc/react-query/server";
 import superjson from "superjson";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
-import { PageLayout } from "~/components/layout";
+import { PageLayout } from "~/components/Layout";
+import Image from "next/image";
+import { PostView } from "~/components/PostView";
 
 type ProfilePageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
 type ProfileStaticPropsContext = GetStaticPropsContext<{ slug: string }>;
+
+function ProfileFeed(props: { userId: string; userName: string | null }) {
+  const { data, isLoading } = api.post.getPostsByUserId.useQuery({
+    userId: props.userId,
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+
+  if (!data || data.length === 0)
+    return <div>No posts from {props.userName ?? ""}</div>;
+
+  return (
+    <div className="flex flex-col">
+      {data.map((postWithUser) => (
+        <PostView key={postWithUser.post.id} {...postWithUser} />
+      ))}
+    </div>
+  );
+}
 
 export default function ProfilePage({ username }: ProfilePageProps) {
   const { data } = api.profile.getUserByUsername.useQuery({
@@ -26,7 +47,18 @@ export default function ProfilePage({ username }: ProfilePageProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout>
-        <div>{data.username}</div>
+        <div className="relative h-36 bg-slate-600">
+          <Image
+            src={data.imageUrl}
+            alt={`${data.username}'s profile picture`}
+            width={128}
+            height={128}
+            className="absolute bottom-0 left-0 ml-4 translate-y-1/2 rounded-full border-4 border-black bg-black"
+          />
+        </div>
+        <div className="h-[64px]"></div>
+        <div className="border-b border-slate-400 p-4 text-2xl font-bold">{`@${data.username}`}</div>
+        <ProfileFeed userId={data.id} userName={data.username} />
       </PageLayout>
     </>
   );
