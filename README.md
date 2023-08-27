@@ -1,6 +1,6 @@
 # YATC - Yet Another Twitter Clone
 
-![YATC Logo](https://github.com/Ericoptero/yatc/public/assets/logo.svg)
+![YATC Logo](https://raw.githubusercontent.com/Ericoptero/yatc/main/public/assets/logo.svg)
 
 **YATC (Yet Another Twitter Clone)** is a Twitter-like social media platform built using **Next.js, tRPC, Tailwind, Prisma and Clerk**. This project aims to replicate the core functionality of Twitter, allowing users to post tweets, follow other users, like tweets, and engage in real-time discussions.
 
