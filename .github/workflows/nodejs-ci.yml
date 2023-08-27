@@ -27,9 +27,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Run TypeScript
-        run: npm run build
-
       - name: Type Checking
         run: npm run typecheck
 
