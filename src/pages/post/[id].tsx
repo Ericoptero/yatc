@@ -1,7 +1,7 @@
 import type { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 
-import { generateServerSideHelpers } from "~/server/helpers/ServerSideHelpers";
+import { generateServerSideHelpers } from "~/server/helpers/serverSideHelpers";
 import { api } from "~/utils/api";
 import { PageLayout } from "~/components/Layout";
 import { PostView } from "~/components/PostView";

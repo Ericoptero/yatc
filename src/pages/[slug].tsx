@@ -4,7 +4,7 @@ import { api } from "~/utils/api";
 import { PageLayout } from "~/components/Layout";
 import Image from "next/image";
 import { PostView } from "~/components/PostView";
-import { generateServerSideHelpers } from "~/server/helpers/ServerSideHelpers";
+import { generateServerSideHelpers } from "~/server/helpers/serverSideHelpers";
 
 type ProfilePageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
